@@ -77,7 +77,7 @@ def displayRadon(img,segmentAngle,size):
     sumAngle = 0
     while sumAngle < 180:
         radonTrans = getRadonAtAngle(img,sumAngle,size)
-        #print(radonTrans)
+        print(radonTrans)
         print(sumAngle)
         xaxis = []
 
@@ -92,11 +92,14 @@ if __name__ == '__main__':
 
     directory = 'irmaSample'
     filepath = 'irmaSample/'
+
     for filename in os.listdir(directory):
         if filename.endswith('.png'):
             absPath = filepath + filename
             #print(absPath)
             img = cv2.imread(absPath,0)
+
+            #'normalizing' image size
             resizeImg = cv2.resize(img,(512,512))
             resizeHeight,resizeWidth = resizeImg.shape
             
