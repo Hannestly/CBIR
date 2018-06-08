@@ -109,7 +109,7 @@ if __name__ == '__main__':
             img = cv2.imread(absPath,0)
 
             #'normalizing' image size
-            resizeImg = cv2.resize(img,(512,512))
+            resizeImg = cv2.resize(img,(32,32))
             resizeHeight,resizeWidth = resizeImg.shape
             
             #print(resizeHeight,resizeWidth)
