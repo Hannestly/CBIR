@@ -6,6 +6,17 @@ import os
 import csv
 import statistics
 
+# filename, IRMAcode, and barcode will be saved in json file
+jsonFile = open("barcode.json","w")
+
+def writeJson(filename, irmaNum, barcode):
+    jsonFile.write("{ \n")
+    jsonFile.write("\t \"filename\": \"{}\", \n".format(filename))
+    jsonFile.write("\t \"irmaNum\": \"{}\", \n" .format(irmaNum))
+    jsonFile.write("\t \"barcode\": {} \n".format(barcode))
+    jsonFile.write("}, \n")
+
+
 #input: radon transform P array values, finds a non-zero threshold and binarize the P array
 #return: binarized P-array
 def binarize(pArray):
@@ -30,15 +41,16 @@ def getIrmaCode(filename):
         for row in reader:
             for column in row:
                 if column == name:
-                    print(column,row[1])
-                    continue
+                    print(column)
+                    return(row[1])
     with open('irmaSample/irmacode2.csv','r') as f:
         reader = csv.reader(f,dialect='excel',delimiter=',')
         for row in reader:
             for column in row:
                 if column == name:
-                    print(column, row[5])
-                    continue
+                    print(column)
+                    return(row[5])
+                    
 
 
 
@@ -99,30 +111,27 @@ def displayRadon(img,segmentAngle,size):
         
 if __name__ == '__main__':
 
-    directory = 'irmaSample'
-    filepath = 'irmaSample/'
-
+    directory = 'dataset1'
+    filepath = 'dataset1/'
+    jsonFile.write('[')
     for filename in os.listdir(directory):
         if filename.endswith('.png'):
             absPath = filepath + filename
             #print(absPath)
             img = cv2.imread(absPath,0)
-
+            
             #'normalizing' image size
             resizeImg = cv2.resize(img,(32,32))
             resizeHeight,resizeWidth = resizeImg.shape
             
             #print(resizeHeight,resizeWidth)
-            getIrmaCode(filename)
-            cv2.imshow('image',img)
-            cv2.waitKey(0)
-            cv2.destroyAllWindows()
+            irmaNum = getIrmaCode(filename)
             barcode = displayRadon(resizeImg,45,resizeHeight)
-            print(barcode)
-
-            
+            writeJson(filename, irmaNum, barcode)
         else:
             continue
+    jsonFile.write(']')
+    jsonFile.close
 
 
 
