@@ -4,9 +4,24 @@ import matplotlib.pyplot as plt
 import math
 import os
 import csv
+import statistics
 
+#input: radon transform P array values, finds a non-zero threshold and binarize the P array
+#return: binarized P-array
+def binarize(pArray):
+    #taking out 0s in consideration for median 
+    filterpArray = list(filter(lambda x:x != 0,pArray))
+    threshold = statistics.median(filterpArray)
+    for i in range(0,len(pArray)):
+        if pArray[i] > threshold:
+            pArray[i] = 1
+        else:
+            pArray[i] = 0
+    return pArray
 
-
+#input: original file name
+# reads the original file name, search through 2 csv files
+# and print IRMA code
 def getIrmaCode(filename):
     name = filename.replace('.png','')
     irmaCode = ''
@@ -70,23 +85,17 @@ def getRadonAtAngle(img,angle,size):
                     pVal += img[y][x]
             radonVal.append(pVal)
             p += 1        
-
+    radonVal = binarize(radonVal)
     return radonVal
 
 def displayRadon(img,segmentAngle,size):
     sumAngle = 0
+    barcode = []
     while sumAngle < 180:
         radonTrans = getRadonAtAngle(img,sumAngle,size)
-        print(radonTrans)
-        print(sumAngle)
-        xaxis = []
-
-        for xaxisVal in range(0,len(radonTrans)):
-            xaxis.append(xaxisVal)
-        plt.plot(xaxis,radonTrans,'go-',linewidth=1,markersize=1)
-        plt.show()
-
+        barcode = barcode + radonTrans
         sumAngle += segmentAngle
+    return barcode
         
 if __name__ == '__main__':
 
@@ -108,7 +117,8 @@ if __name__ == '__main__':
             cv2.imshow('image',img)
             cv2.waitKey(0)
             cv2.destroyAllWindows()
-            displayRadon(resizeImg,22.5,resizeHeight)
+            barcode = displayRadon(resizeImg,45,resizeHeight)
+            print(barcode)
 
             
         else:
