@@ -32,21 +32,20 @@ def search(filename,barcode):
 
     
         
-
-for data in imgdata:
-    if data["filename"] == filename:
-        print('Searching for:')
-        print('filename: \t {}'.format(data["filename"]))
-        print('IRMA code: \t {}'.format(data["irmaNum"]))
-        print('barcode: \t {}'.format(data["barcode"]))
-        
-        closeHit = search(data["filename"],data["barcode"])
-        print('Closest hit: ')
-        print('filename: \t {}'.format(closeHit[0]))
-        print('IRMA code: \t {}'.format(closeHit[1]))
-        print('barcode: \t {}'.format(closeHit[2]))
-        print('hemming distance: \t {}'.format(closeHit[3]))
-        break
-
-
+if __name__ == '__main__':
+    for data in imgdata:
+        if data["filename"] == filename:
+            print('Searching for:')
+            print('filename: \t {}'.format(data["filename"]))
+            print('IRMA code: \t {}'.format(data["irmaNum"]))
+            print('barcode: \t {}'.format(data["barcode"]))
+            
+            closeHit = search(data["filename"],data["barcode"])
+            print('Closest hit: ')
+            print('filename: \t {}'.format(closeHit[0]))
+            print('IRMA code: \t {}'.format(closeHit[1]))
+            print('barcode: \t {}'.format(closeHit[2]))
+            print('hemming distance: \t {}'.format(closeHit[3]))
+            break
+    jsonFile.close()
 
