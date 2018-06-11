@@ -7,7 +7,8 @@ import csv
 import statistics
 
 # filename, IRMAcode, and barcode will be saved in json file
-jsonFile = open("barcode.json","w")
+numProjections = input("Enter number of projections:    ")
+jsonFile = open("barcodes64/" + "barcode" + numProjections + ".json","w")
 
 def writeJson(filename, irmaNum, barcode):
     jsonFile.write("{ \n")
@@ -17,18 +18,7 @@ def writeJson(filename, irmaNum, barcode):
     jsonFile.write("}, \n")
 
 
-#input: radon transform P array values, finds a non-zero threshold and binarize the P array
-#return: binarized P-array
-def binarize(pArray):
-    #taking out 0s in consideration for median 
-    filterpArray = list(filter(lambda x:x != 0,pArray))
-    threshold = statistics.median(filterpArray)
-    for i in range(0,len(pArray)):
-        if pArray[i] > threshold:
-            pArray[i] = 1
-        else:
-            pArray[i] = 0
-    return pArray
+
 
 #input: original file name
 # reads the original file name, search through 2 csv files
@@ -52,7 +42,18 @@ def getIrmaCode(filename):
                     return(row[5])
                     
 
-
+#input: radon transform P array values, finds a non-zero threshold and binarize the P array
+#return: binarized P-array
+def binarize(pArray):
+    #taking out 0s in consideration for median 
+    filterpArray = list(filter(lambda x:x != 0,pArray))
+    threshold = statistics.median(filterpArray)
+    for i in range(0,len(pArray)):
+        if pArray[i] > threshold:
+            pArray[i] = 1
+        else:
+            pArray[i] = 0
+    return pArray
 
 def getRadonAtAngle(img,angle,size):
     radonVal = []
@@ -117,16 +118,19 @@ if __name__ == '__main__':
     for filename in os.listdir(directory):
         if filename.endswith('.png'):
             absPath = filepath + filename
-            #print(absPath)
             img = cv2.imread(absPath,0)
             
             #'normalizing' image size
-            resizeImg = cv2.resize(img,(32,32))
+            resizeImg = cv2.resize(img,(64,64))
             resizeHeight,resizeWidth = resizeImg.shape
             
-            #print(resizeHeight,resizeWidth)
+            #incrementing angle
+            incAngle = 180/int(numProjections)
+            #returns corresponding irmacode for file
             irmaNum = getIrmaCode(filename)
-            barcode = displayRadon(resizeImg,45,resizeHeight)
+            #creates radon barcode of the file 
+            barcode = displayRadon(resizeImg,incAngle,resizeHeight)
+            #writes the filename, IRMA code, and barcode to json 
             writeJson(filename, irmaNum, barcode)
         else:
             continue

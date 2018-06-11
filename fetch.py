@@ -4,7 +4,7 @@ filename = input('Enter file number:    ')
 filename = filename + '.png'
 
 
-jsonFile = open('barcode.json','r')
+jsonFile = open('barcodes/barcode4.json','r')
 imgdata = json.load(jsonFile)
 
 def search(filename,barcode):
