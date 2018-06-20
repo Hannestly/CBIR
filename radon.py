@@ -121,7 +121,7 @@ if __name__ == '__main__':
             img = cv2.imread(absPath,0)
             
             #'normalizing' image size
-            resizeImg = cv2.resize(img,(64,64))
+            resizeImg = cv2.resize(img,(32,32))
             resizeHeight,resizeWidth = resizeImg.shape
             
             #incrementing angle
